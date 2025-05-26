@@ -1,99 +1,159 @@
-from pathlib import Path
 import json
+from datetime import datetime
+from pathlib import Path
 from config.paths import USER_PROFILES_DIR
 from utilities.logger import setup_logger
 
-class OnboardingFlow:
-    """
-    Norwegian-focused onboarding with 6 essential questions
-    Uses emoji scales and quick-tap inputs for low friction
-    """
-    
+# Only essential questions for MVP filtration
+ESSENTIAL_QUESTIONS = [
+    {
+        "id": "prisfokus",
+        "text": "Hvor viktig er lave priser for deg? (1=ikke viktig, 5=veldig viktig)",
+        "type": "scale",
+        "range": (1, 5),
+        "mandatory": True
+    },
+    {
+        "id": "butikker",
+        "text": "Hvilke butikker handler du oftest i? (skriv tall, flere mulig, f.eks. 1,3)",
+        "type": "multiplechoice",
+        "options": ["Coop", "Rema 1000", "Kiwi", "Oda"],
+        "mandatory": True
+    },
+    {
+        "id": "matrestriksjoner",
+        "text": "Har du noen matrestriksjoner? (skriv tall, flere mulig, eller 0 for ingen)",
+        "type": "multiplechoice",
+        "options": ["Vegetar", "Vegan", "Glutenfri", "Laktosefri"],
+        "mandatory": False
+    },
+    {
+        "id": "postnummer",
+        "text": "Hva er postnummeret ditt?",
+        "type": "text",
+        "mandatory": True
+    },
+    {
+        "id": "transport",
+        "text": "Hvordan handler du oftest?",
+        "type": "choice",
+        "options": ["Går", "Bil", "Sykkel", "Levering"],
+        "mandatory": True
+    }
+]
+
+class DagligdagsOnboarding:
     def __init__(self):
         self.logger = setup_logger("onboarding")
-        self.essential_questions = [
-            {
-                "id": "price_sensitivity",
-                "text": "Hvor viktig er lav pris for deg?",
-                "type": "scale",
-                "labels": ["Ikke viktig 😞", "Veldig viktig 😊"]
-            },
-            {
-                "id": "preferred_stores",
-                "text": "Hvor handler du vanligvis?",
-                "type": "multi_select",
-                "options": ["Coop", "Rema 1000", "Kiwi", "Oda"]
-            },
-            {
-                "id": "dietary_restrictions", 
-                "text": "Har du noen matrestriksjoner?",
-                "type": "checkboxes",
-                "options": ["Vegetar", "Vegan", "Glutenfri", "Laktosefri"]
-            },
-            {
-                "id": "location",
-                "text": "Hvor bor du (postnummer)?",
-                "type": "text"
-            },
-            {
-                "id": "transport_mode",
-                "text": "Hvordan handler du?",
-                "type": "single_choice",
-                "options": ["Går", "Bil", "Sykkel", "Levering"]
-            },
-            {
-                "id": "sustainability",
-                "text": "Hvor viktig er bærekraft?",
-                "type": "scale",
-                "labels": ["Ikke viktig 😞", "Veldig viktig 😊"]
-            }
-        ]
-        self.optional_questions = [...]  # For later expansion
+        self.answers = {}
+        self.userid = None
 
-    def start_flow(self) -> dict:
-        """Guided onboarding with progress visualization"""
-        print("\nVelkommen til Dagligdags! La oss komme i gang:\n")
-        responses = {}
-        
-        for idx, q in enumerate(self.essential_questions, 1):
-            print(f"Spørsmål {idx}/{len(self.essential_questions)}")
-            responses[q['id']] = self._ask_question(q)
-            print("---")
-            
-        self._save_profile(responses)
-        return responses
+    def start_onboarding(self):
+        print("\nVelkommen til Dagligdags onboarding!\n")
+        self.userid = self.generate_userid()
+        total = len(ESSENTIAL_QUESTIONS)
+        for i, q in enumerate(ESSENTIAL_QUESTIONS, start=1):
+            answer = self.ask_question(q, i, total)
+            self.answers[q["id"]] = answer
+        self.save_user_profile()
+        self.show_profile_summary()
+        return self.userid
 
-    def _ask_question(self, question: dict):
-        """Unified question handler with input validation"""
-        print(f"\n{question['text']}")
-        
-        if question['type'] == 'scale':
-            return self._handle_scale(question['labels'])
-        elif question['type'] == 'multi_select':
-            return self._handle_multi_select(question['options'])
-        # ... other input types
+    def ask_question(self, q, current, total):
+        print(f"\n[{current}/{total}] {q['text']}")
+        if q["type"] == "text":
+            while True:
+                answer = input("Svar: ").strip()
+                if not answer and q["mandatory"]:
+                    print("Dette feltet er påkrevd.")
+                else:
+                    return answer or None
+        elif q["type"] == "choice":
+            for idx, opt in enumerate(q["options"], 1):
+                print(f"{idx}. {opt}")
+            while True:
+                answer = input("Velg ett tall: ").strip()
+                if not answer and q["mandatory"]:
+                    print("Dette feltet er påkrevd.")
+                elif not answer:
+                    return None
+                else:
+                    try:
+                        idx = int(answer)
+                        if 1 <= idx <= len(q["options"]):
+                            return q["options"][idx-1]
+                        else:
+                            print("Ugyldig valg.")
+                    except ValueError:
+                        print("Skriv et tall.")
+        elif q["type"] == "multiplechoice":
+            for idx, opt in enumerate(q["options"], 1):
+                print(f"{idx}. {opt}")
+            print("Flere mulig, separer med komma. 0 for ingen.")
+            while True:
+                answer = input("Dine valg: ").strip()
+                if not answer and q["mandatory"]:
+                    print("Dette feltet er påkrevd.")
+                elif not answer:
+                    return []
+                else:
+                    try:
+                        if answer == "0":
+                            return []
+                        indices = [int(x) for x in answer.split(",")]
+                        valid = [q["options"][i-1] for i in indices if 1 <= i <= len(q["options"])]
+                        if valid:
+                            return valid
+                        else:
+                            print("Ugyldige valg.")
+                    except ValueError:
+                        print("Skriv tall separert med komma.")
+        elif q["type"] == "scale":
+            minv, maxv = q["range"]
+            while True:
+                answer = input(f"Velg et tall mellom {minv} og {maxv}: ").strip()
+                if not answer and q["mandatory"]:
+                    print("Dette feltet er påkrevd.")
+                elif not answer:
+                    return None
+                else:
+                    try:
+                        val = int(answer)
+                        if minv <= val <= maxv:
+                            return val
+                        else:
+                            print(f"Velg mellom {minv}-{maxv}.")
+                    except ValueError:
+                        print("Skriv et tall.")
+        else:
+            return None
 
-    def _handle_scale(self, labels: list) -> int:
-        """Emoji-based 1-5 scale input"""
-        print(f"  {labels[0]} 1 2 3 4 5 {labels[1]}")
-        while True:
-            try:
-                val = int(input("Velg (1-5): "))
-                if 1 <= val <= 5:
-                    return val
-                raise ValueError
-            except:
-                print("Vennligst skriv et tall mellom 1-5")
+    def generate_userid(self):
+        return datetime.now().strftime("%Y%m%d%H%M%S")
 
-    # ... other input handlers
-
-    def _save_profile(self, data: dict):
-        """Save with Norwegian timestamp format"""
-        profile_path = USER_PROFILES_DIR / f"user_{data.get('location', 'unknown')}.json"
+    def save_user_profile(self):
+        profile = {
+            "userid": self.userid,
+            "createdat": datetime.now().isoformat(),
+            "answers": self.answers,
+        }
+        profile_path = Path(USER_PROFILES_DIR) / f"{self.userid}.json"
         try:
-            with profile_path.open('w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2)
-            self.logger.info(f"Profil lagret: {profile_path}")
+            with open(profile_path, "w", encoding="utf-8") as f:
+                json.dump(profile, f, indent=4)
+            self.logger.info(f"User profile saved for {self.userid}")
         except Exception as e:
-            self.logger.error(f"Lagring feilet: {str(e)}")
-            raise
+            self.logger.error(f"Failed to save profile: {str(e)}")
+            print("En feil oppstod under lagring av profilen.")
+
+    def show_profile_summary(self):
+        print("\n--- Oppsummering ---")
+        print(f"Postnummer: {self.answers.get('postnummer', 'Ikke oppgitt')}")
+        print(f"Butikker: {', '.join(self.answers.get('butikker', []))}")
+        print(f"Prisfokus: {self.answers.get('prisfokus', 'Ikke oppgitt')}/5")
+        print("--------------------")
+
+if __name__ == "__main__":
+    onboarding = DagligdagsOnboarding()
+    userid = onboarding.start_onboarding()
+    print(f"\nOnboarding fullført. Din bruker-ID er: {userid}")
