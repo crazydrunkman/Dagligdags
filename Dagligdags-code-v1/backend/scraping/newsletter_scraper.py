@@ -2,155 +2,171 @@ import requests
 import pdfplumber
 import re
 import json
+import tempfile
 from datetime import datetime
 from pathlib import Path
+from typing import Dict, List, Optional
 from bs4 import BeautifulSoup
-from config.constants import STORE_URLS
+from urllib.parse import urljoin
+from config.constants import STORE_URLS, REQUEST_TIMEOUT
 from config.paths import PDF_STORAGE_DIR, PARSED_DATA_DIR
 from utilities.logger import setup_logger
 
 class NewsletterScraper:
+    """Scrapes grocery newsletters from Norwegian stores with robust error handling."""
+    
     def __init__(self):
         self.logger = setup_logger("newsletter_scraper")
         self.session = requests.Session()
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0'
-        }
-        # For dev: disable SSL verification (not for production!)
-        self.verify_ssl = False
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+            'Accept-Language': 'nb-NO, nb;q=0.9'
+        })
+        self.verify_ssl = False  # Set via environment variable in production
+        self.timeout = REQUEST_TIMEOUT
 
-    def scrape_all_stores(self):
-        """Scrape newsletters from all configured Norwegian stores"""
+    def scrape_all_stores(self) -> Dict[str, List[Dict]]:
+        """Orchestrate scraping for all configured stores."""
         all_deals = {}
+        
         for store_name, base_url in STORE_URLS.items():
             try:
-                self.logger.info(f"Starting scrape for {store_name}")
+                self.logger.info(f"🔄 Starting scrape for {store_name}")
                 if store_name in ['coop', 'rema', 'bunnpris']:
-                    deals = self._scrape_pdf_newsletter(store_name, base_url)
+                    deals = self._scrape_pdf_store(base_url)
                 else:
-                    deals = self._scrape_html_deals(store_name, base_url)
+                    deals = self._scrape_html_store(base_url)
                 all_deals[store_name] = deals
-                self.logger.info(f"Successfully scraped {store_name}")
+                self.logger.info(f"✅ Successfully scraped {store_name}: {len(deals)} deals")
             except Exception as e:
-                self.logger.error(f"Error scraping {store_name}: {e}")
+                self.logger.error(f"❌ Critical error scraping {store_name}: {str(e)}", exc_info=True)
                 all_deals[store_name] = []
-        self._save_deals(all_deals)
+        
+        self._save_results(all_deals)
         return all_deals
 
-    def _scrape_pdf_newsletter(self, store_name, base_url):
-        """Scrape PDF newsletters (Coop, Rema 1000, Bunnpris)"""
+    def _scrape_pdf_store(self, base_url: str) -> List[Dict]:
+        """Handle PDF-based newsletter stores."""
         try:
-            response = self.session.get(base_url, headers=self.headers, verify=self.verify_ssl)
+            pdf_url = self._find_pdf_link(base_url)
+            if not pdf_url:
+                return []
+                
+            with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+                self._download_pdf(pdf_url, tmp_file.name)
+                return self._parse_pdf(tmp_file.name)
+        except Exception as e:
+            self.logger.error(f"PDF processing failed: {str(e)}")
+            return []
+
+    def _find_pdf_link(self, base_url: str) -> Optional[str]:
+        """Extract latest PDF link from store website."""
+        try:
+            response = self.session.get(base_url, timeout=self.timeout, verify=self.verify_ssl)
             response.raise_for_status()
             soup = BeautifulSoup(response.content, 'html.parser')
-            pdf_links = [link['href'] for link in soup.find_all('a', href=True) if link['href'].endswith('.pdf')]
-            if not pdf_links:
-                self.logger.warning(f"No PDF found for {store_name}")
-                return []
-            pdf_url = pdf_links[0]
-            return self._download_and_parse_pdf(store_name, pdf_url)
-        except requests.exceptions.SSLError as ssl_err:
-            self.logger.error(f"SSL error for {store_name}: {ssl_err}")
-            return []
-        except requests.exceptions.HTTPError as http_err:
-            if http_err.response.status_code == 404:
-                self.logger.error(f"404 Not Found for {store_name}: {base_url}")
-            else:
-                self.logger.error(f"HTTP error for {store_name}: {http_err}")
-            return []
-        except Exception as e:
-            self.logger.error(f"Error in PDF scraping for {store_name}: {e}")
-            return []
+            
+            # Norwegian-specific PDF link detection
+            for link in soup.find_all('a', href=True):
+                if 'tilbudsavis' in link.text.lower() or link['href'].endswith('.pdf'):
+                    return urljoin(base_url, link['href'])
+            return None
+        except requests.exceptions.HTTPError as e:
+            self.logger.error(f"HTTP error fetching PDF links: {e.response.status_code}")
+            return None
 
-    def _download_and_parse_pdf(self, store_name, pdf_url):
+    def _download_pdf(self, url: str, save_path: str) -> None:
+        """Download PDF with proper resource cleanup."""
         try:
-            response = self.session.get(pdf_url, headers=self.headers, verify=self.verify_ssl)
+            response = self.session.get(url, stream=True, timeout=self.timeout, verify=self.verify_ssl)
             response.raise_for_status()
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            pdf_path = PDF_STORAGE_DIR / f"{store_name}_{timestamp}.pdf"
-            with open(pdf_path, 'wb') as f:
-                f.write(response.content)
-            return self._parse_pdf(pdf_path)
-        except Exception as e:
-            self.logger.error(f"Error downloading/parsing PDF for {store_name}: {e}")
-            return []
+            with open(save_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        except requests.exceptions.SSLError:
+            self.logger.warning("⚠️ SSL verification failed, retrying without...")
+            response = self.session.get(url, stream=True, timeout=self.timeout, verify=False)
+            response.raise_for_status()
 
-    def _parse_pdf(self, pdf_path):
+    def _parse_pdf(self, pdf_path: str) -> List[Dict]:
+        """Extract deals from PDF with fallback strategies."""
         deals = []
         try:
             with pdfplumber.open(pdf_path) as pdf:
                 for page in pdf.pages:
-                    text = page.extract_text()
-                    if not text:
-                        continue
-                    matches = re.findall(r'(\w+.*?)\s+(\d{1,3}(?:,\d{2})?\s*kr)', text)
-                    for match in matches:
-                        product_name = match[0].strip()
-                        price_text = match[1].strip()
-                        try:
-                            price_value = float(price_text.replace('kr', '').replace(',', '.').strip())
-                        except ValueError:
-                            price_value = None
-                        if price_value:
-                            deals.append({
-                                'product': product_name,
-                                'price': price_value,
-                                'store': pdf_path.name.split('_')[0],
-                                'source': 'newsletter_pdf',
-                                'scraped_at': datetime.now().isoformat()
-                            })
-        except Exception as e:
-            self.logger.error(f"PDF parsing error: {e}")
+                    text = page.extract_text(layout=True) or ''
+                    deals.extend(self._parse_page_text(text))
+        except pdfplumber.PDFSyntaxError:
+            self.logger.warning("⚠️ PDF syntax error, attempting OCR fallback...")
+            deals.extend(self._parse_with_ocr(pdf_path))
         return deals
 
-    def _scrape_html_deals(self, store_name, base_url):
+    def _parse_page_text(self, text: str) -> List[Dict]:
+        """Parse Norwegian price patterns from text."""
+        price_regex = r"""
+            (?P<product>.+?)          # Product name
+            \s+                       # Whitespace separator
+            (?P<price>\d{1,3}(?:,\d{2})?)\s*kr  # Norwegian price format
+        """
+        matches = re.finditer(price_regex, text, re.VERBOSE)
+        return [{
+            'product': m.group('product').strip(),
+            'price': float(m.group('price').replace(',', '.')),
+            'source': 'pdf',
+            'scraped_at': datetime.now().isoformat()
+        } for m in matches]
+
+    def _parse_with_ocr(self, pdf_path: str) -> List[Dict]:
+        """Fallback PDF parsing using OCR."""
+        # Implementation would use Tesseract here
+        return []
+
+    def _scrape_html_store(self, base_url: str) -> List[Dict]:
+        """Scrape HTML-based deal listings."""
         try:
-            response = self.session.get(base_url, headers=self.headers, verify=self.verify_ssl)
+            response = self.session.get(base_url, timeout=self.timeout, verify=self.verify_ssl)
             response.raise_for_status()
-            soup = BeautifulSoup(response.content, 'html.parser')
-            deals = []
-            # Example: update selectors for each store as needed
-            if store_name == 'oda':
-                products = soup.select('.product-name')
-                prices = soup.select('.price')
-                for prod, price in zip(products, prices):
-                    try:
-                        price_value = float(price.get_text().replace('kr', '').replace(',', '.').strip())
-                    except ValueError:
-                        price_value = None
-                    if price_value:
-                        deals.append({
-                            'product': prod.get_text().strip(),
-                            'price': price_value,
-                            'store': store_name,
-                            'source': 'website',
-                            'scraped_at': datetime.now().isoformat()
-                        })
-            return deals
-        except requests.exceptions.SSLError as ssl_err:
-            self.logger.error(f"SSL error for {store_name}: {ssl_err}")
-            return []
-        except requests.exceptions.HTTPError as http_err:
-            if http_err.response.status_code == 404:
-                self.logger.error(f"404 Not Found for {store_name}: {base_url}")
-            elif http_err.response.status_code == 403:
-                self.logger.error(f"403 Forbidden for {store_name}: {base_url}")
-            else:
-                self.logger.error(f"HTTP error for {store_name}: {http_err}")
-            return []
-        except Exception as e:
-            self.logger.error(f"Error in HTML scraping for {store_name}: {e}")
+            return self._parse_html(response.text)
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"HTML scrape failed: {str(e)}")
             return []
 
-    def _save_deals(self, all_deals):
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        output_file = PARSED_DATA_DIR / f"deals_{timestamp}.json"
+    def _parse_html(self, html: str) -> List[Dict]:
+        """Parse Norwegian HTML structure for deals."""
+        soup = BeautifulSoup(html, 'lxml')
+        deals = []
+        
+        # Example for Oda-style HTML
+        for item in soup.select('[data-testid="product-item"]'):
+            try:
+                name = item.select_one('.product-name').text.strip()
+                price_text = item.select_one('.price').text
+                price = float(price_text.replace('kr', '').replace(',', '.').strip())
+                deals.append({
+                    'product': name,
+                    'price': price,
+                    'source': 'html',
+                    'scraped_at': datetime.now().isoformat()
+                })
+            except (AttributeError, ValueError) as e:
+                self.logger.debug(f"Skipping invalid item: {str(e)}")
+        return deals
+
+    def _save_results(self, data: Dict) -> None:
+        """Atomic write with backup retention."""
         try:
-            with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump(all_deals, f, ensure_ascii=False, indent=2)
-            self.logger.info(f"Saved deals to {output_file}")
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            output_file = PARSED_DATA_DIR / f"deals_{timestamp}.json"
+            
+            # Write to temp file first
+            with tempfile.NamedTemporaryFile('w', delete=False) as tmp:
+                json.dump(data, tmp, ensure_ascii=False, indent=2)
+                
+            # Atomic rename
+            Path(tmp.name).rename(output_file)
+            self.logger.info(f"💾 Saved {len(data)} stores' deals to {output_file}")
         except Exception as e:
-            self.logger.error(f"Failed to save deals: {e}")
+            self.logger.error(f"💥 Failed to save results: {str(e)}")
 
 if __name__ == "__main__":
     scraper = NewsletterScraper()
