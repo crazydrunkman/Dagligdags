@@ -1,26 +1,31 @@
-import os
 from pathlib import Path
+import os
 
-# Base project directory
-PROJECT_ROOT = Path(__file__).parent.parent
-DATA_DIR = PROJECT_ROOT / "backend" / "data"
-LOG_DIR = PROJECT_ROOT / "logs"
+class Paths:
+    """Norwegian-centric path configuration with automatic directory creation."""
+    
+    # Base directories
+    PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent
+    DATA_DIR: Path = PROJECT_ROOT / 'data'
+    
+    # Scraping artifacts
+    SCRAPER_STORAGE: Path = DATA_DIR / 'scraped_data'
+    PDF_STORAGE: Path = SCRAPER_STORAGE / 'pdfs'
+    HTML_CACHE: Path = SCRAPER_STORAGE / 'html'
+    
+    # Processed data
+    NORMALIZED_DATA: Path = DATA_DIR / 'normalized'
+    USER_PROFILES: Path = DATA_DIR / 'users'
+    
+    # System paths
+    LOG_DIR: Path = PROJECT_ROOT / 'logs'
+    TEMP_DIR: Path = Path(os.getenv('TMPDIR', '/tmp')) / 'dagligdags'
+    
+    # Create directories on import
+    for dir in [SCRAPER_STORAGE, PDF_STORAGE, HTML_CACHE, 
+                NORMALIZED_DATA, USER_PROFILES, LOG_DIR, TEMP_DIR]:
+        dir.mkdir(parents=True, exist_ok=True)
 
-# Data directories
-GROCERY_DATA_DIR = DATA_DIR / "grocery_data"
-USER_PROFILES_DIR = DATA_DIR / "user_profiles"
-NORMALIZED_DATA_DIR = DATA_DIR / "normalized_data"
-
-# Scraping directories
-NEWSLETTER_DIR = GROCERY_DATA_DIR / "newsletters"
-PDF_STORAGE_DIR = NEWSLETTER_DIR / "pdfs"
-PARSED_DATA_DIR = NEWSLETTER_DIR / "parsed"
-
-# Create directories if they don't exist
-for directory in [DATA_DIR, GROCERY_DATA_DIR, USER_PROFILES_DIR, 
-                  NORMALIZED_DATA_DIR, NEWSLETTER_DIR, PDF_STORAGE_DIR, 
-                  PARSED_DATA_DIR, LOG_DIR]:
-    directory.mkdir(parents=True, exist_ok=True)
 
 # File paths
 USER_PROFILE_TEMPLATE = USER_PROFILES_DIR / "user_{user_id}.json"
