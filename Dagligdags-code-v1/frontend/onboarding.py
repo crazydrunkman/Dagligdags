@@ -4,8 +4,7 @@ from pathlib import Path
 from config.paths import USER_PROFILES_DIR
 from utilities.logger import setup_logger
 
-# Only essential questions for MVP filtration
-ESSENTIAL_QUESTIONS = [
+MVP_QUESTIONS = [
     {
         "id": "prisfokus",
         "text": "Hvor viktig er lave priser for deg? (1=ikke viktig, 5=veldig viktig)",
@@ -51,8 +50,8 @@ class DagligdagsOnboarding:
     def start_onboarding(self):
         print("\nVelkommen til Dagligdags onboarding!\n")
         self.userid = self.generate_userid()
-        total = len(ESSENTIAL_QUESTIONS)
-        for i, q in enumerate(ESSENTIAL_QUESTIONS, start=1):
+        total = len(MVP_QUESTIONS)
+        for i, q in enumerate(MVP_QUESTIONS, start=1):
             answer = self.ask_question(q, i, total)
             self.answers[q["id"]] = answer
         self.save_user_profile()
