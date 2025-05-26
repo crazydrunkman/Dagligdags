@@ -1,0 +1,46 @@
+{
+  "user_id": "user_20250526_194608",
+  "created_at": "2025-05-26T19:48:22.274334",
+  "answers": {
+    "allergies": [],
+    "diet": [
+      "none"
+    ],
+    "organic_preference": 5,
+    "local_preference": 3,
+    "avoid_ingredients": [
+      "palmeolje, kunstige søtstoffer"
+    ],
+    "shopping_mode": "both",
+    "preferred_stores": [
+      "coop"
+    ],
+    "loyalty_memberships": [
+      "coop_medlem"
+    ],
+    "location": "Oslo",
+    "transport_mode": "walking",
+    "max_distance": 3.0,
+    "cuisine_preferences": [
+      "italian",
+      "thai"
+    ],
+    "pantry_type": "high_protein",
+    "cooking_style": "both",
+    "staple_foods": [
+      "melk",
+      "egg"
+    ],
+    "package_preference": "bulk",
+    "price_sensitivity": 3,
+    "sustainability_importance": 2,
+    "food_waste_tracking": true,
+    "deal_notifications": true,
+    "expiry_reminders": true,
+    "recipe_suggestions": true,
+    "household_size": 1,
+    "has_children": false,
+    "age_group": "18_25"
+  },
+  "version": "1.0"
+}

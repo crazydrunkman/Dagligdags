@@ -1,0 +1,4 @@
+2025-05-26 19:48:25,845 - database_scraper - INFO - Processed 25 Norwegian food items
+2025-05-26 19:48:25,848 - database_scraper - INFO - Saved database data to /Users/espenborresen/Downloads/Dagligdags-code-v1/backend/data/normalized_data/database_data_20250526_194825.json
+2025-05-26 19:52:20,051 - database_scraper - INFO - Processed 25 Norwegian food items
+2025-05-26 19:52:20,054 - database_scraper - INFO - Saved database data to /Users/espenborresen/Downloads/Dagligdags-code-v1/backend/data/normalized_data/database_data_20250526_195220.json

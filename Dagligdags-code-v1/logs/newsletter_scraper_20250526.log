@@ -1,0 +1,28 @@
+2025-05-26 19:48:22,285 - newsletter_scraper - INFO - Starting scrape for coop
+2025-05-26 19:48:22,433 - newsletter_scraper - ERROR - Error in PDF scraping for coop: HTTPSConnectionPool(host='coop.no', port=443): Max retries exceeded with url: /uke-tilbud/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)')))
+2025-05-26 19:48:22,434 - newsletter_scraper - INFO - Starting scrape for rema
+2025-05-26 19:48:23,249 - newsletter_scraper - ERROR - Error in PDF scraping for rema: 404 Client Error: Not Found for url: https://www.rema.no/aktuelt/aktuelle-tilbud/
+2025-05-26 19:48:23,249 - newsletter_scraper - INFO - Starting scrape for kiwi
+2025-05-26 19:48:23,528 - newsletter_scraper - ERROR - Error in HTML scraping for kiwi: 404 Client Error: Not Found for url: https://kiwi.no/tilbud/
+2025-05-26 19:48:23,528 - newsletter_scraper - INFO - Starting scrape for bunnpris
+2025-05-26 19:48:23,633 - newsletter_scraper - ERROR - Error in PDF scraping for bunnpris: HTTPSConnectionPool(host='www.bunnpris.no', port=443): Max retries exceeded with url: /tilbud/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)')))
+2025-05-26 19:48:23,634 - newsletter_scraper - INFO - Starting scrape for meny
+2025-05-26 19:48:24,084 - newsletter_scraper - INFO - Starting scrape for oda
+2025-05-26 19:48:25,154 - newsletter_scraper - INFO - Starting scrape for wolt
+2025-05-26 19:48:25,630 - newsletter_scraper - INFO - Starting scrape for foodora
+2025-05-26 19:48:25,843 - newsletter_scraper - ERROR - Error in HTML scraping for foodora: 403 Client Error: Forbidden for url: https://www.foodora.no/
+2025-05-26 19:48:25,844 - newsletter_scraper - INFO - Saved deals to /Users/espenborresen/Downloads/Dagligdags-code-v1/backend/data/grocery_data/newsletters/parsed/deals_20250526_194825.json
+2025-05-26 19:52:16,763 - newsletter_scraper - INFO - Starting scrape for coop
+2025-05-26 19:52:16,892 - newsletter_scraper - ERROR - Error in PDF scraping for coop: HTTPSConnectionPool(host='coop.no', port=443): Max retries exceeded with url: /uke-tilbud/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)')))
+2025-05-26 19:52:16,893 - newsletter_scraper - INFO - Starting scrape for rema
+2025-05-26 19:52:17,497 - newsletter_scraper - ERROR - Error in PDF scraping for rema: 404 Client Error: Not Found for url: https://www.rema.no/aktuelt/aktuelle-tilbud/
+2025-05-26 19:52:17,497 - newsletter_scraper - INFO - Starting scrape for kiwi
+2025-05-26 19:52:17,765 - newsletter_scraper - ERROR - Error in HTML scraping for kiwi: 404 Client Error: Not Found for url: https://kiwi.no/tilbud/
+2025-05-26 19:52:17,765 - newsletter_scraper - INFO - Starting scrape for bunnpris
+2025-05-26 19:52:17,821 - newsletter_scraper - ERROR - Error in PDF scraping for bunnpris: HTTPSConnectionPool(host='www.bunnpris.no', port=443): Max retries exceeded with url: /tilbud/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)')))
+2025-05-26 19:52:17,821 - newsletter_scraper - INFO - Starting scrape for meny
+2025-05-26 19:52:18,286 - newsletter_scraper - INFO - Starting scrape for oda
+2025-05-26 19:52:19,573 - newsletter_scraper - INFO - Starting scrape for wolt
+2025-05-26 19:52:19,759 - newsletter_scraper - INFO - Starting scrape for foodora
+2025-05-26 19:52:20,048 - newsletter_scraper - ERROR - Error in HTML scraping for foodora: 403 Client Error: Forbidden for url: https://www.foodora.no/
+2025-05-26 19:52:20,051 - newsletter_scraper - INFO - Saved deals to /Users/espenborresen/Downloads/Dagligdags-code-v1/backend/data/grocery_data/newsletters/parsed/deals_20250526_195220.json

@@ -1,0 +1,586 @@
+{
+  "norwegian_foods": [
+    {
+      "name": "melk",
+      "category": "dairy",
+      "norwegian_name": "melk",
+      "protein_per_100g": 3.4,
+      "calories_per_100g": 64,
+      "typical_price_range": {
+        "min": 18,
+        "max": 25,
+        "unit": "liter"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "ost",
+      "category": "dairy",
+      "norwegian_name": "ost",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "yoghurt",
+      "category": "dairy",
+      "norwegian_name": "yoghurt",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "smør",
+      "category": "dairy",
+      "norwegian_name": "smør",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "fløte",
+      "category": "dairy",
+      "norwegian_name": "fløte",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "kjøtt",
+      "category": "meat",
+      "norwegian_name": "kjøtt",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 3,
+      "local_availability": true
+    },
+    {
+      "name": "kylling",
+      "category": "meat",
+      "norwegian_name": "kylling",
+      "protein_per_100g": 31.0,
+      "calories_per_100g": 165,
+      "typical_price_range": {
+        "min": 89,
+        "max": 120,
+        "unit": "kg"
+      },
+      "sustainability_score": 6,
+      "local_availability": true
+    },
+    {
+      "name": "svinekjøtt",
+      "category": "meat",
+      "norwegian_name": "svinekjøtt",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "lam",
+      "category": "meat",
+      "norwegian_name": "lam",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "fisk",
+      "category": "meat",
+      "norwegian_name": "fisk",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "laks",
+      "category": "meat",
+      "norwegian_name": "laks",
+      "protein_per_100g": 25.0,
+      "calories_per_100g": 208,
+      "typical_price_range": {
+        "min": 180,
+        "max": 250,
+        "unit": "kg"
+      },
+      "sustainability_score": 4,
+      "local_availability": true
+    },
+    {
+      "name": "poteter",
+      "category": "vegetables",
+      "norwegian_name": "poteter",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 9,
+      "local_availability": true
+    },
+    {
+      "name": "gulrøtter",
+      "category": "vegetables",
+      "norwegian_name": "gulrøtter",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 9,
+      "local_availability": true
+    },
+    {
+      "name": "løk",
+      "category": "vegetables",
+      "norwegian_name": "løk",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "brokkoli",
+      "category": "vegetables",
+      "norwegian_name": "brokkoli",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "salat",
+      "category": "vegetables",
+      "norwegian_name": "salat",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "brød",
+      "category": "grains",
+      "norwegian_name": "brød",
+      "protein_per_100g": 9.0,
+      "calories_per_100g": 265,
+      "typical_price_range": {
+        "min": 25,
+        "max": 40,
+        "unit": "stk"
+      },
+      "sustainability_score": 7,
+      "local_availability": true
+    },
+    {
+      "name": "pasta",
+      "category": "grains",
+      "norwegian_name": "pasta",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "ris",
+      "category": "grains",
+      "norwegian_name": "ris",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "havre",
+      "category": "grains",
+      "norwegian_name": "havre",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "mel",
+      "category": "grains",
+      "norwegian_name": "mel",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "lefse",
+      "category": "nordic_staples",
+      "norwegian_name": "lefse",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "knekkebrød",
+      "category": "nordic_staples",
+      "norwegian_name": "knekkebrød",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "kaviar",
+      "category": "nordic_staples",
+      "norwegian_name": "kaviar",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    },
+    {
+      "name": "leverpostei",
+      "category": "nordic_staples",
+      "norwegian_name": "leverpostei",
+      "protein_per_100g": 0,
+      "calories_per_100g": 0,
+      "typical_price_range": {
+        "min": 10,
+        "max": 50,
+        "unit": "kg"
+      },
+      "sustainability_score": 5,
+      "local_availability": true
+    }
+  ],
+  "nutrition_data": {
+    "melk": {
+      "protein_g": 3.4,
+      "carbs_g": 5.0,
+      "fat_g": 3.5,
+      "fiber_g": 0,
+      "calories": 64,
+      "vitamins": {
+        "vitamin_d": true,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": [
+        "lactose"
+      ]
+    },
+    "egg": {
+      "protein_g": 13.0,
+      "carbs_g": 1.0,
+      "fat_g": 11.0,
+      "fiber_g": 0,
+      "calories": 155,
+      "vitamins": {
+        "vitamin_d": true,
+        "vitamin_c": false,
+        "b_vitamins": true
+      },
+      "allergens": [
+        "egg"
+      ]
+    },
+    "brød": {
+      "protein_g": 9.0,
+      "carbs_g": 49.0,
+      "fat_g": 3.2,
+      "fiber_g": 7.0,
+      "calories": 265,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": [
+        "gluten"
+      ]
+    },
+    "kylling": {
+      "protein_g": 31.0,
+      "carbs_g": 0,
+      "fat_g": 3.6,
+      "fiber_g": 0,
+      "calories": 165,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": []
+    },
+    "laks": {
+      "protein_g": 25.0,
+      "carbs_g": 0,
+      "fat_g": 14.0,
+      "fiber_g": 0,
+      "calories": 208,
+      "vitamins": {
+        "vitamin_d": true,
+        "vitamin_c": false,
+        "b_vitamins": true
+      },
+      "allergens": [
+        "fish"
+      ]
+    },
+    "poteter": {
+      "protein_g": 0,
+      "carbs_g": 0,
+      "fat_g": 0,
+      "fiber_g": 0,
+      "calories": 0,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": true,
+        "b_vitamins": false
+      },
+      "allergens": []
+    },
+    "ris": {
+      "protein_g": 0,
+      "carbs_g": 0,
+      "fat_g": 0,
+      "fiber_g": 0,
+      "calories": 0,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": []
+    },
+    "pasta": {
+      "protein_g": 0,
+      "carbs_g": 0,
+      "fat_g": 0,
+      "fiber_g": 0,
+      "calories": 0,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": []
+    },
+    "ost": {
+      "protein_g": 0,
+      "carbs_g": 0,
+      "fat_g": 0,
+      "fiber_g": 0,
+      "calories": 0,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": [
+        "lactose"
+      ]
+    },
+    "yoghurt": {
+      "protein_g": 0,
+      "carbs_g": 0,
+      "fat_g": 0,
+      "fiber_g": 0,
+      "calories": 0,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": []
+    },
+    "kjøtt": {
+      "protein_g": 0,
+      "carbs_g": 0,
+      "fat_g": 0,
+      "fiber_g": 0,
+      "calories": 0,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": true
+      },
+      "allergens": []
+    },
+    "fisk": {
+      "protein_g": 0,
+      "carbs_g": 0,
+      "fat_g": 0,
+      "fiber_g": 0,
+      "calories": 0,
+      "vitamins": {
+        "vitamin_d": false,
+        "vitamin_c": false,
+        "b_vitamins": false
+      },
+      "allergens": []
+    }
+  },
+  "store_locations": {
+    "oslo": {
+      "coop": [
+        {
+          "name": "Coop Mega Storo",
+          "lat": 59.9407,
+          "lng": 10.672,
+          "address": "Stasjonsveien 25"
+        },
+        {
+          "name": "Coop Prix Grünerløkka",
+          "lat": 59.9227,
+          "lng": 10.7594,
+          "address": "Thorvald Meyers gate 68"
+        },
+        {
+          "name": "Coop Obs Aker Brygge",
+          "lat": 59.9081,
+          "lng": 10.7297,
+          "address": "Brynjulf Bulls plass 1"
+        }
+      ],
+      "rema1000": [
+        {
+          "name": "Rema 1000 Majorstuen",
+          "lat": 59.9289,
+          "lng": 10.7166,
+          "address": "Bogstadveien 44"
+        },
+        {
+          "name": "Rema 1000 Grønland",
+          "lat": 59.9127,
+          "lng": 10.7618,
+          "address": "Grønlandsleiret 15"
+        },
+        {
+          "name": "Rema 1000 Bislett",
+          "lat": 59.9234,
+          "lng": 10.7348,
+          "address": "Pilestredet 35"
+        }
+      ],
+      "kiwi": [
+        {
+          "name": "Kiwi Frogner",
+          "lat": 59.9185,
+          "lng": 10.7097,
+          "address": "Huitfeldts gate 19"
+        },
+        {
+          "name": "Kiwi Sagene",
+          "lat": 59.9345,
+          "lng": 10.7512,
+          "address": "Bentsebrugata 30"
+        },
+        {
+          "name": "Kiwi Tøyen",
+          "lat": 59.9175,
+          "lng": 10.7698,
+          "address": "Jørgensens gate 2"
+        }
+      ]
+    }
+  }
+}

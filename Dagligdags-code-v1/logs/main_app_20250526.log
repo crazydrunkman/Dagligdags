@@ -1,0 +1,1 @@
+2025-05-26 19:48:25,850 - main_app - ERROR - Application error: TerminalMenu.__init__() got an unexpected keyword argument 'cursor'
